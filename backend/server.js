@@ -4,7 +4,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 
 const OrderBook = require("./models/orderBook");
-const PortfolioManager = require("./models/portfolioManager");
+const PortfolioManager = require("./models/PortfolioManager");
 
 const app = express();
 app.use(cors());
