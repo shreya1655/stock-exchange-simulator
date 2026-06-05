@@ -14,7 +14,7 @@ import TradeHistory from "./components/TradeHistory";
 import Portfolio from "./components/Portfolio";
 import Leaderboard from "./components/Leaderboard";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://your-backend.onrender.com");
 
 function App() {
   const [user, setUser] = useState(null);
@@ -70,7 +70,7 @@ function App() {
 
   axios
     .get(
-      `http://localhost:5000/orders/portfolio/${user.uid}?email=${user.email}`
+      `https://your-backend.onrender.com/orders/portfolio/${user.uid}?email=${user.email}`
     )
     .then((res) => {
       setPortfolio(res.data);
@@ -81,7 +81,7 @@ function App() {
 
   axios
     .get(
-      "http://localhost:5000/leaderboard"
+      "https://your-backend.onrender.com/leaderboard"
     )
     .then((res) => {
       setLeaderboard(res.data);
@@ -142,81 +142,64 @@ function App() {
   }
 
   return (
-<div
-  style={{
-    maxWidth: "1200px",
-    margin: "0 auto",
-    padding: "30px"
-  }}
->      <h2>
-        Welcome {user.email}
-      </h2>
+  <div
+    style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: "30px"
+    }}
+  >
+<h2>Welcome {user?.email}</h2>
+    <button
+      onClick={logout}
+      style={{
+        background: "#2563eb",
+        color: "white",
+        border: "none",
+        padding: "10px 20px",
+        borderRadius: "8px",
+        cursor: "pointer",
+        marginBottom: "20px"
+      }}
+    >
+      Logout
+    </button>
 
-      <button
-  onClick={logout}
-  style={{
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "10px 20px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    marginBottom: "20px"
-  }}
->
-  Logout
-</button>
-
-      <div
-  style={{
-    display: "flex",
-    gap: "30px",
-    marginBottom: "30px"
-  }}
->
-  <Portfolio portfolio={portfolio} />
-  <Leaderboard leaderboard={leaderboard} />
-</div>
-
-<div
-  style={{
-    background: "white",
-    borderRadius: "12px",
-    padding: "20px",
-    marginBottom: "20px",
-    boxShadow:
-      "0 2px 8px rgba(0,0,0,0.1)",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  }}
-> 
-<OrderForm
-  user={user}
-  symbol={selectedStock}
-/>
-
-</div>
-      
-
-
-<div
-  style={{
-    display: "flex",
-    gap: "20px"
-  }}
->
-<OrderBook
-  book={
-    books[selectedStock] || {
-      buyOrders: [],
-      sellOrders: []
-    }
-  }
-/>  <TradeHistory trades={trades} />
-</div>
+    {/* TOP SECTION */}
+    <div
+      style={{
+        display: "flex",
+        gap: "30px",
+        marginBottom: "30px"
+      }}
+    >
+      <Portfolio portfolio={portfolio} />
+      <Leaderboard leaderboard={leaderboard} />
     </div>
-  );
+
+    {/* ORDER FORM */}
+    <OrderForm user={user} symbol={selectedStock} />
+
+    {/* BOTTOM SECTION */}
+    <div
+      style={{
+        display: "flex",
+        gap: "20px"
+      }}
+    >
+      <OrderBook
+        book={
+          books[selectedStock] || {
+            buyOrders: [],
+            sellOrders: []
+          }
+        }
+      />
+
+      <TradeHistory trades={trades} />
+    </div>
+  </div>
+);
 }
 
 export default App;
