@@ -14,7 +14,7 @@ import TradeHistory from "./components/TradeHistory";
 import Portfolio from "./components/Portfolio";
 import Leaderboard from "./components/Leaderboard";
 
-const socket = io("https://your-backend.onrender.com");
+const socket = io("https://stock-exchange-simulator.onrender.com");
 
 function App() {
   const [user, setUser] = useState(null);
@@ -70,7 +70,7 @@ function App() {
 
   axios
     .get(
-      `https://your-backend.onrender.com/orders/portfolio/${user.uid}?email=${user.email}`
+      `https://stock-exchange-simulator.onrender.com/orders/portfolio/${user.uid}?email=${user.email}`
     )
     .then((res) => {
       setPortfolio(res.data);
@@ -81,7 +81,7 @@ function App() {
 
   axios
     .get(
-      "https://your-backend.onrender.com/leaderboard"
+      "https://stock-exchange-simulator.onrender.com/leaderboard"
     )
     .then((res) => {
       setLeaderboard(res.data);

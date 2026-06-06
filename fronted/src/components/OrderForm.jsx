@@ -12,7 +12,7 @@ function OrderForm({
   const submitOrder = async () => {
     try {
       const response = await axios.post(
-        "https://your-backend.onrender.com/orders/place",
+        "https://stock-exchange-simulator.onrender.com/orders/place",
         {
           symbol,
           side,
