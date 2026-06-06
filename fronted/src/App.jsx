@@ -178,7 +178,35 @@ function App() {
     </div>
 
     {/* ORDER FORM */}
-    <OrderForm user={user} symbol={selectedStock} />
+    <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "15px",
+    marginBottom: "20px"
+  }}
+>
+  <label>Select Stock:</label>
+
+  <select
+    value={selectedStock}
+    onChange={(e) =>
+      setSelectedStock(e.target.value)
+    }
+  >
+    <option value="AAPL">AAPL</option>
+    <option value="GOOGL">GOOGL</option>
+    <option value="TSLA">TSLA</option>
+    <option value="MSFT">MSFT</option>
+    <option value="AMZN">AMZN</option>
+  </select>
+
+  <OrderForm
+  user={user}
+  symbol={selectedStock}
+  setSelectedStock={setSelectedStock}
+/>
+</div>
 
     {/* BOTTOM SECTION */}
     <div

@@ -3,7 +3,8 @@ import axios from "axios";
 
 function OrderForm({
   user,
-  symbol
+  symbol,
+  setSelectedStock
 }) {
   const [side, setSide] = useState("BUY");
   const [price, setPrice] = useState("");
@@ -46,9 +47,18 @@ function OrderForm({
     width: "100%"
   }}
 >
-  <h3 style={{ margin: 0 }}>
-    {symbol}
-  </h3>
+  <select
+  value={symbol}
+  onChange={(e) =>
+    setSelectedStock(e.target.value)
+  }
+>
+  <option value="AAPL">AAPL</option>
+  <option value="GOOGL">GOOGL</option>
+  <option value="TSLA">TSLA</option>
+  <option value="MSFT">MSFT</option>
+  <option value="AMZN">AMZN</option>
+</select>
 
   <select
     value={side}
