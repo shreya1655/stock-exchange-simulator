@@ -2,7 +2,33 @@ const { v4: uuidv4 } = require("uuid");
 
 class OrderBook {
   constructor() {
-    this.books = {};
+    this.books = {
+  AAPL: {
+    buyOrders: [],
+    sellOrders: [],
+    trades: []
+  },
+  GOOGL: {
+    buyOrders: [],
+    sellOrders: [],
+    trades: []
+  },
+  TSLA: {
+    buyOrders: [],
+    sellOrders: [],
+    trades: []
+  },
+  MSFT: {
+    buyOrders: [],
+    sellOrders: [],
+    trades: []
+  },
+  AMZN: {
+    buyOrders: [],
+    sellOrders: [],
+    trades: []
+  }
+};
   }
 
   createStock(symbol) {
