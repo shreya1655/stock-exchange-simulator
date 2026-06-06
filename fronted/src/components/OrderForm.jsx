@@ -2,64 +2,74 @@ import { useState } from "react";
 import axios from "axios";
 
 function OrderForm({
-  user,
-  symbol,
-  setSelectedStock
+user,
+symbol,
+setSelectedStock
 }) {
-  const [side, setSide] = useState("BUY");
-  const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("");
+const [side, setSide] = useState("BUY");
+const [price, setPrice] = useState("");
+const [quantity, setQuantity] = useState("");
 
-  const submitOrder = async () => {
-    try {
-      const response = await axios.post(
-        "https://stock-exchange-simulator.onrender.com/orders/place",
-        {
-          symbol,
-          side,
-          price,
-          quantity,
-          userId: user.uid,
-          email: user.email
-        }
-      );
+const submitOrder = async () => {
+if (!price || !quantity) {
+alert("Please enter price and quantity");
+return;
+}
 
-      console.log(response.data);
-
-      setPrice("");
-      setQuantity("");
-    } catch (err) {
-      console.error(err);
-
-      alert(
-        err.response?.data?.message ||
-        "Order Failed"
-      );
+```
+try {
+  const response = await axios.post(
+    "https://stock-exchange-simulator.onrender.com/orders/place",
+    {
+      symbol,
+      side,
+      price,
+      quantity,
+      userId: user.uid,
+      email: user.email
     }
-  };
+  );
 
-  return (
-  <div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: "15px",
-    width: "100%"
-  }}
->
-  <label>Select Stock:</label>
+  console.log(response.data);
+
+  setPrice("");
+  setQuantity("");
+} catch (err) {
+  console.error(err);
+
+  alert(
+    err.response?.data?.message ||
+    "Order Failed"
+  );
+}
+```
+
+};
+
+return (
+<div
+style={{
+display: "flex",
+alignItems: "center",
+gap: "15px",
+width: "100%",
+marginBottom: "20px"
+}}
+> <label>Select Stock:</label>
+
+```
   <select
-  value={symbol}
-  onChange={(e) =>
-    setSelectedStock(e.target.value)
-  }
->
-  <option value="AAPL">AAPL</option>
-  <option value="GOOGL">GOOGL</option>
-  <option value="TSLA">TSLA</option>
-  <option value="MSFT">MSFT</option>
-  <option value="AMZN">AMZN</option>
-</select>
+    value={symbol}
+    onChange={(e) =>
+      setSelectedStock(e.target.value)
+    }
+  >
+    <option value="AAPL">AAPL</option>
+    <option value="GOOGL">GOOGL</option>
+    <option value="TSLA">TSLA</option>
+    <option value="MSFT">MSFT</option>
+    <option value="AMZN">AMZN</option>
+  </select>
 
   <select
     value={side}

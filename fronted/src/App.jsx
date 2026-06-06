@@ -204,9 +204,10 @@ function App() {
 
       {/* ORDER FORM */}
       <OrderForm
-        user={user}
-        symbol={selectedStock}
-      />
+  user={user}
+  symbol={selectedStock}
+  setSelectedStock={setSelectedStock}
+/>
 
       <div
         style={{
