@@ -201,47 +201,6 @@ function App() {
         <Leaderboard leaderboard={leaderboard} />
       </div>
 
-      {/* STOCK SELECTOR */}
-      <div
-        style={{
-          marginBottom: "20px"
-        }}
-      >
-        <h3>Select Stock</h3>
-
-        <select
-          value={selectedStock}
-          onChange={(e) =>
-            setSelectedStock(
-              e.target.value
-            )
-          }
-          style={{
-            padding: "10px",
-            borderRadius: "8px"
-          }}
-        >
-          <option value="AAPL">
-            AAPL
-          </option>
-
-          <option value="GOOGL">
-            GOOGL
-          </option>
-
-          <option value="TSLA">
-            TSLA
-          </option>
-
-          <option value="MSFT">
-            MSFT
-          </option>
-
-          <option value="AMZN">
-            AMZN
-          </option>
-        </select>
-      </div>
 
       {/* ORDER FORM */}
       <OrderForm
