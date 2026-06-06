@@ -8,7 +8,7 @@ const PortfolioManager = require("./models/PortfolioManager");
 
 const app = express();
 
-// ===================== MIDDLEWARE =====================
+// ====================== MIDDLEWARE ======================
 app.use(express.json());
 
 app.use(
@@ -16,32 +16,32 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://your-vercel-app.vercel.app"
+      "https://stock-exchange-simulator.vercel.app"
     ],
     credentials: true
   })
 );
 
-// ===================== CREATE SERVER =====================
+// ====================== CREATE SERVER ======================
 const server = http.createServer(app);
 
-// ===================== SOCKET.IO =====================
+// ====================== SOCKET.IO ======================
 const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://your-vercel-app.vercel.app"
+      "https://stock-exchange-simulator.vercel.app"
     ],
     methods: ["GET", "POST"]
   }
 });
 
-// ===================== CORE INSTANCES =====================
+// ====================== CORE INSTANCES ======================
 const orderBook = new OrderBook();
 const portfolioManager = new PortfolioManager();
 
-// ===================== ROUTES =====================
+// ====================== ROUTES ======================
 const orderRoutes = require("./routes/orders")(
   orderBook,
   portfolioManager,
@@ -56,18 +56,18 @@ const leaderboardRoutes = require("./routes/leaderboard")(
 app.use("/orders", orderRoutes);
 app.use("/leaderboard", leaderboardRoutes);
 
-// ===================== HEALTH CHECK =====================
+// ====================== HEALTH CHECK ======================
 app.get("/", (req, res) => {
   res.send("Exchange Running 🚀");
 });
 
-// ===================== SOCKET CONNECTION =====================
+// ====================== SOCKET CONNECTION ======================
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
   socket.emit("init", {
     book: orderBook.getAllBooks(),
-    trades: orderBook.getTrades()
+    trades: orderBook.getAllBooks()
   });
 
   socket.on("disconnect", () => {
@@ -75,9 +75,9 @@ io.on("connection", (socket) => {
   });
 });
 
-// ===================== START SERVER (IMPORTANT FIX) =====================
+// ====================== START SERVER ======================
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+  console.log(`Server running on port ${PORT}`);
 });
