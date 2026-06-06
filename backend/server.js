@@ -17,7 +17,7 @@ const corsOptions = {
     "http://localhost:5173",
     "http://localhost:3000",
     "https://stock-exchange-simulator.vercel.app",
-    "https://stock-exchange-simulator-8n7xxnaxl-pshreya1721-5856s-projects.vercel.app"
+    "https://stock-exchange-simulator-f9phh2q5j-pshreya1721-5856s-projects.vercel.app"
   ],
   methods: ["GET", "POST", "DELETE"],
   credentials: true
