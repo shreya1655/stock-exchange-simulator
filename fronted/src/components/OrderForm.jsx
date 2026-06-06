@@ -47,6 +47,7 @@ function OrderForm({
     width: "100%"
   }}
 >
+  <label>Select Stock:</label>
   <select
   value={symbol}
   onChange={(e) =>

@@ -14,26 +14,28 @@ import TradeHistory from "./components/TradeHistory";
 import Portfolio from "./components/Portfolio";
 import Leaderboard from "./components/Leaderboard";
 
-const socket = io("https://stock-exchange-simulator.onrender.com");
+const socket = io(
+  "https://stock-exchange-simulator.onrender.com"
+);
 
 function App() {
   const [user, setUser] = useState(null);
 
-  const [books, setBooks] =
-  useState({});
+  const [books, setBooks] = useState({});
 
   const [selectedStock, setSelectedStock] =
-  useState("AAPL");
+    useState("AAPL");
 
-  const [leaderboard, setLeaderboard] = useState([]);
-  
+  const [leaderboard, setLeaderboard] =
+    useState([]);
+
   const [trades, setTrades] = useState([]);
 
   const [portfolio, setPortfolio] =
     useState(null);
 
+  // ---------------- LOGIN ----------------
 
-  // Firebase persistent login
   useEffect(() => {
     const unsubscribe =
       onAuthStateChanged(
@@ -65,45 +67,51 @@ function App() {
     setUser(null);
   };
 
+  // ---------------- LOAD DATA ----------------
+
+  const loadPortfolio = async () => {
+    if (!user) return;
+
+    try {
+      const res = await axios.get(
+        `https://stock-exchange-simulator.onrender.com/orders/portfolio/${user.uid}?email=${user.email}`
+      );
+
+      setPortfolio(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const loadLeaderboard = async () => {
+    try {
+      const res = await axios.get(
+        "https://stock-exchange-simulator.onrender.com/leaderboard"
+      );
+
+      setLeaderboard(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     if (user) {
-
-  axios
-    .get(
-      `https://stock-exchange-simulator.onrender.com/orders/portfolio/${user.uid}?email=${user.email}`
-    )
-    .then((res) => {
-      setPortfolio(res.data);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-
-  axios
-    .get(
-      "https://stock-exchange-simulator.onrender.com/leaderboard"
-    )
-    .then((res) => {
-      setLeaderboard(res.data);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-}
-    
+      loadPortfolio();
+      loadLeaderboard();
+    }
 
     socket.on("init", (data) => {
-  setBooks(data.book || {});
-  setTrades(data.trades || []);
-});
+      setBooks(data.book || {});
+      setTrades(data.trades || []);
+    });
 
     socket.on(
-  "orderbook_update",
-  (data) => {
-    setBooks(data);
-  }
-);
-
+      "orderbook_update",
+      (data) => {
+        setBooks(data);
+      }
+    );
 
     socket.on(
       "trade_update",
@@ -112,20 +120,31 @@ function App() {
           ...newTrades,
           ...prev
         ]);
+
+        // LIVE PORTFOLIO UPDATE
+        if (user) {
+          loadPortfolio();
+          loadLeaderboard();
+        }
       }
     );
 
-    socket.on("leaderboard_update", (data) => {
-  setLeaderboard(data);
-});
+    socket.on(
+      "leaderboard_update",
+      (data) => {
+        setLeaderboard(data);
+      }
+    );
 
     return () => {
-  socket.off("init");
-  socket.off("orderbook_update");
-  socket.off("trade_update");
-  socket.off("leaderboard_update");
-};
+      socket.off("init");
+      socket.off("orderbook_update");
+      socket.off("trade_update");
+      socket.off("leaderboard_update");
+    };
   }, [user]);
+
+  // ---------------- LOGIN SCREEN ----------------
 
   if (!user) {
     return (
@@ -141,93 +160,121 @@ function App() {
     );
   }
 
+  // ---------------- MAIN UI ----------------
+
   return (
-  <div
-    style={{
-      maxWidth: "1200px",
-      margin: "0 auto",
-      padding: "30px"
-    }}
-  >
-<h2>Welcome {user?.email}</h2>
-    <button
-      onClick={logout}
-      style={{
-        background: "#2563eb",
-        color: "white",
-        border: "none",
-        padding: "10px 20px",
-        borderRadius: "8px",
-        cursor: "pointer",
-        marginBottom: "20px"
-      }}
-    >
-      Logout
-    </button>
-
-    {/* TOP SECTION */}
     <div
       style={{
-        display: "flex",
-        gap: "30px",
-        marginBottom: "30px"
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: "30px"
       }}
     >
-      <Portfolio portfolio={portfolio} />
-      <Leaderboard leaderboard={leaderboard} />
-    </div>
+      <h2>
+        Welcome {user.email}
+      </h2>
 
-    {/* ORDER FORM */}
-    <div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: "15px",
-    marginBottom: "20px"
-  }}
->
-  <label>Select Stock:</label>
+      <button
+        onClick={logout}
+        style={{
+          background: "#2563eb",
+          color: "white",
+          border: "none",
+          padding: "10px 20px",
+          borderRadius: "8px",
+          cursor: "pointer",
+          marginBottom: "20px"
+        }}
+      >
+        Logout
+      </button>
 
-  <select
-    value={selectedStock}
-    onChange={(e) =>
-      setSelectedStock(e.target.value)
-    }
-  >
-    <option value="AAPL">AAPL</option>
-    <option value="GOOGL">GOOGL</option>
-    <option value="TSLA">TSLA</option>
-    <option value="MSFT">MSFT</option>
-    <option value="AMZN">AMZN</option>
-  </select>
+      {/* TOP */}
+      <div
+        style={{
+          display: "flex",
+          gap: "30px",
+          marginBottom: "30px"
+        }}
+      >
+        <Portfolio portfolio={portfolio} />
+        <Leaderboard leaderboard={leaderboard} />
+      </div>
 
-  <OrderForm
-  user={user}
-  symbol={selectedStock}
-  setSelectedStock={setSelectedStock}
-/>
-</div>
+      {/* STOCK SELECTOR */}
+      <div
+        style={{
+          marginBottom: "20px"
+        }}
+      >
+        <h3>Select Stock</h3>
 
-    {/* BOTTOM SECTION */}
-    <div
-      style={{
-        display: "flex",
-        gap: "20px"
-      }}
-    >
-      <OrderBook
-        book={
-          books[selectedStock] || {
-            buyOrders: [],
-            sellOrders: []
+        <select
+          value={selectedStock}
+          onChange={(e) =>
+            setSelectedStock(
+              e.target.value
+            )
           }
-        }
+          style={{
+            padding: "10px",
+            borderRadius: "8px"
+          }}
+        >
+          <option value="AAPL">
+            AAPL
+          </option>
+
+          <option value="GOOGL">
+            GOOGL
+          </option>
+
+          <option value="TSLA">
+            TSLA
+          </option>
+
+          <option value="MSFT">
+            MSFT
+          </option>
+
+          <option value="AMZN">
+            AMZN
+          </option>
+        </select>
+      </div>
+
+      {/* ORDER FORM */}
+      <OrderForm
+        user={user}
+        symbol={selectedStock}
       />
 
-      <TradeHistory trades={trades} />
+      <div
+        style={{
+          display: "flex",
+          gap: "20px",
+          marginTop: "20px"
+        }}
+      >
+        <OrderBook
+          book={
+            books[selectedStock] || {
+              buyOrders: [],
+              sellOrders: []
+            }
+          }
+        />
+
+        <TradeHistory
+          trades={trades.filter(
+            (trade) =>
+              trade.symbol ===
+              selectedStock
+          )}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default App;
