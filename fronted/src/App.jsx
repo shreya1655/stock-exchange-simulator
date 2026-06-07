@@ -23,8 +23,7 @@ function App() {
 
   const [books, setBooks] = useState({});
 
-  const [selectedStock, setSelectedStock] =
-    useState("AAPL");
+  <OrderForm setSelectedStock={setSelectedStock} />
 
   const [leaderboard, setLeaderboard] =
     useState([]);

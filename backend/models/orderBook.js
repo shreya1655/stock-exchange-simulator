@@ -154,53 +154,41 @@ class OrderBook {
     return this.books;
   }
 
-  cancelOrder(orderId) {
+  cancelOrder(orderId, userId) {
   for (const symbol in this.books) {
     const book = this.books[symbol];
 
-    const buyIndex =
-      book.buyOrders.findIndex(
-        (o) => o.id === orderId
-      );
+    const buyIndex = book.buyOrders.findIndex(o => o.id === orderId);
 
     if (buyIndex !== -1) {
-      book.buyOrders.splice(
-        buyIndex,
-        1
-      );
+      const order = book.buyOrders[buyIndex];
 
-      return {
-        success: true,
-        message:
-          "Buy order cancelled"
-      };
+      if (order.userId !== userId) {
+        return { success: false, message: "Not your order" };
+      }
+
+      book.buyOrders.splice(buyIndex, 1);
+
+      return { success: true, message: "Buy order cancelled" };
     }
 
-    const sellIndex =
-      book.sellOrders.findIndex(
-        (o) => o.id === orderId
-      );
+    const sellIndex = book.sellOrders.findIndex(o => o.id === orderId);
 
     if (sellIndex !== -1) {
-      book.sellOrders.splice(
-        sellIndex,
-        1
-      );
+      const order = book.sellOrders[sellIndex];
 
-      return {
-        success: true,
-        message:
-          "Sell order cancelled"
-      };
+      if (order.userId !== userId) {
+        return { success: false, message: "Not your order" };
+      }
+
+      book.sellOrders.splice(sellIndex, 1);
+
+      return { success: true, message: "Sell order cancelled" };
     }
   }
 
-  return {
-    success: false,
-    message: "Order not found"
-  };
+  return { success: false, message: "Order not found" };
 }
-
 
   getTrades(symbol) {
     this.createStock(symbol);

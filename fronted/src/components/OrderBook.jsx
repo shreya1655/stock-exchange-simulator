@@ -7,13 +7,18 @@ sellOrders: []
 }
 }) {
 const cancelOrder = async (orderId) => {
-try {
-await axios.delete(
-`https://stock-exchange-simulator.onrender.com/orders/cancel/${orderId}`
-);
-} catch (err) {
-console.error(err);
-}
+  try {
+    await axios.delete(
+      `https://stock-exchange-simulator.onrender.com/orders/cancel/${orderId}`,
+      {
+        data: {
+          userId: auth.currentUser.uid
+        }
+      }
+    );
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 return (

@@ -11,26 +11,12 @@ class PortfolioManager {
         cash: 100000,
 
         holdings: {
-          AAPL: {
-            shares: 100,
-            avgBuyPrice: 100
-          },
-
-          TSLA: {
-            shares: 100,
-            avgBuyPrice: 100
-          },
-
-          NVDA: {
-            shares: 100,
-            avgBuyPrice: 100
-          },
-
-          MSFT: {
-            shares: 100,
-            avgBuyPrice: 100
-          }
-        }
+  AAPL: { shares: 0, avgBuyPrice: 0 },
+  GOOGL: { shares: 0, avgBuyPrice: 0 },
+  TSLA: { shares: 0, avgBuyPrice: 0 },
+  MSFT: { shares: 0, avgBuyPrice: 0 },
+  AMZN: { shares: 0, avgBuyPrice: 0 }
+}
       };
     }
 
