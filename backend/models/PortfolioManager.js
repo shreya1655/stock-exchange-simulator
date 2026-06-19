@@ -11,11 +11,11 @@ class PortfolioManager {
         cash: 100000,
 
         holdings: {
-  AAPL: { shares: 0, avgBuyPrice: 0 },
-  GOOGL: { shares: 0, avgBuyPrice: 0 },
-  TSLA: { shares: 0, avgBuyPrice: 0 },
-  MSFT: { shares: 0, avgBuyPrice: 0 },
-  AMZN: { shares: 0, avgBuyPrice: 0 }
+  AAPL: { shares: 100, avgBuyPrice: 100 },
+  GOOGL: { shares: 100, avgBuyPrice: 100 },
+  TSLA: { shares: 100, avgBuyPrice: 100 },
+  MSFT: { shares: 100, avgBuyPrice: 100 },
+  AMZN: { shares: 100, avgBuyPrice: 100 }
 }
       };
     }
@@ -123,8 +123,11 @@ class PortfolioManager {
     portfolio.cash +
     holdingsValue;
 
-  const initialValue =
-    100000 + (100 * 100 * 4);
+  const initialValue = 150000;
+
+const pnl =
+  totalValue -
+  initialValue;
 
   const pnl =
     totalValue -

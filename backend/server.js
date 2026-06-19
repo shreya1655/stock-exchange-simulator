@@ -80,6 +80,19 @@ io.on("connection", (socket) => {
       socket.id
     );
   });
+
+  socket.on(
+  "benchmark:broadcast",
+  () => {
+    io.emit(
+      "benchmark:update",
+      {
+        emittedAt:
+          Date.now()
+      }
+    );
+  }
+);
 });
 
 // ====================== START SERVER ======================

@@ -216,13 +216,14 @@ function App() {
         }}
       >
         <OrderBook
-          book={
-            books[selectedStock] || {
-              buyOrders: [],
-              sellOrders: []
-            }
-          }
-        />
+  book={
+    books[selectedStock] || {
+      buyOrders: [],
+      sellOrders: []
+    }
+  }
+  user={user}
+/>
 
         <TradeHistory
           trades={trades.filter(
