@@ -128,25 +128,29 @@ module.exports = (
   }
 );
   // CANCEL ORDER
-  router.delete(
+  // CANCEL ORDER
+router.delete(
   "/cancel/:orderId",
   (req, res) => {
+    const { orderId } = req.params;
+    const { userId } = req.body;
 
-    console.log(
-      "Cancel request received:",
-      req.params.orderId
-    );
+    console.log("Cancel request received:", {
+      orderId,
+      userId
+    });
 
     const result =
       orderBook.cancelOrder(
-        req.params.orderId
+        orderId,
+        userId
       );
 
     console.log(result);
 
     if (!result.success) {
       return res
-        .status(404)
+        .status(403)
         .json(result);
     }
 
@@ -155,9 +159,8 @@ module.exports = (
       orderBook.getAllBooks()
     );
 
-    res.json(result);
+    return res.json(result);
   }
 );
-
   return router;
 };

@@ -129,10 +129,6 @@ const pnl =
   totalValue -
   initialValue;
 
-  const pnl =
-    totalValue -
-    initialValue;
-
   return {
     ...portfolio,
     holdingsValue,

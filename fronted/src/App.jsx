@@ -14,26 +14,20 @@ import TradeHistory from "./components/TradeHistory";
 import Portfolio from "./components/Portfolio";
 import Leaderboard from "./components/Leaderboard";
 
-const socket = io(
-  "https://stock-exchange-simulator.onrender.com"
-);
+const API_URL =
+  "https://stock-exchange-simulator.onrender.com";
+const socket = io(API_URL);
 
 function App() {
   const [user, setUser] = useState(null);
-
   const [books, setBooks] = useState({});
-
-  <OrderForm setSelectedStock={setSelectedStock} />
-
+  const [selectedStock, setSelectedStock] =
+    useState("AAPL");
   const [leaderboard, setLeaderboard] =
     useState([]);
-
   const [trades, setTrades] = useState([]);
-
   const [portfolio, setPortfolio] =
     useState(null);
-
-  // ---------------- LOGIN ----------------
 
   useEffect(() => {
     const unsubscribe =
@@ -66,14 +60,12 @@ function App() {
     setUser(null);
   };
 
-  // ---------------- LOAD DATA ----------------
-
   const loadPortfolio = async () => {
     if (!user) return;
 
     try {
       const res = await axios.get(
-        `https://stock-exchange-simulator.onrender.com/orders/portfolio/${user.uid}?email=${user.email}`
+        `${API_URL}/orders/portfolio/${user.uid}?email=${user.email}`
       );
 
       setPortfolio(res.data);
@@ -85,7 +77,7 @@ function App() {
   const loadLeaderboard = async () => {
     try {
       const res = await axios.get(
-        "https://stock-exchange-simulator.onrender.com/leaderboard"
+        `${API_URL}/leaderboard`
       );
 
       setLeaderboard(res.data);
@@ -120,7 +112,6 @@ function App() {
           ...prev
         ]);
 
-        // LIVE PORTFOLIO UPDATE
         if (user) {
           loadPortfolio();
           loadLeaderboard();
@@ -143,8 +134,6 @@ function App() {
     };
   }, [user]);
 
-  // ---------------- LOGIN SCREEN ----------------
-
   if (!user) {
     return (
       <div style={{ padding: 40 }}>
@@ -158,8 +147,6 @@ function App() {
       </div>
     );
   }
-
-  // ---------------- MAIN UI ----------------
 
   return (
     <div
@@ -188,7 +175,6 @@ function App() {
         Logout
       </button>
 
-      {/* TOP */}
       <div
         style={{
           display: "flex",
@@ -200,13 +186,11 @@ function App() {
         <Leaderboard leaderboard={leaderboard} />
       </div>
 
-
-      {/* ORDER FORM */}
       <OrderForm
-  user={user}
-  symbol={selectedStock}
-  setSelectedStock={setSelectedStock}
-/>
+        user={user}
+        symbol={selectedStock}
+        setSelectedStock={setSelectedStock}
+      />
 
       <div
         style={{
@@ -216,14 +200,14 @@ function App() {
         }}
       >
         <OrderBook
-  book={
-    books[selectedStock] || {
-      buyOrders: [],
-      sellOrders: []
-    }
-  }
-  user={user}
-/>
+          book={
+            books[selectedStock] || {
+              buyOrders: [],
+              sellOrders: []
+            }
+          }
+          user={user}
+        />
 
         <TradeHistory
           trades={trades.filter(
