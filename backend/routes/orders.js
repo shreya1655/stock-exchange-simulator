@@ -127,40 +127,31 @@ module.exports = (
     res.json(portfolio);
   }
 );
-  // CANCEL ORDER
-  // CANCEL ORDER
-router.delete(
-  "/cancel/:orderId",
-  (req, res) => {
-    const { orderId } = req.params;
-    const { userId } = req.body;
+  router.delete("/cancel/:orderId", (req, res) => {
+  const orderId = req.params.orderId;
+  const userId = req.body.userId || req.query.userId;
 
-    console.log("Cancel request received:", {
-      orderId,
-      userId
+  console.log("Cancel request received:", orderId, "by user:", userId);
+
+  if (!userId) {
+    return res.status(400).json({
+      success: false,
+      message: "userId is required to cancel an order",
     });
-
-    const result =
-      orderBook.cancelOrder(
-        orderId,
-        userId
-      );
-
-    console.log(result);
-
-    if (!result.success) {
-      return res
-        .status(403)
-        .json(result);
-    }
-
-    io.emit(
-      "orderbook_update",
-      orderBook.getAllBooks()
-    );
-
-    return res.json(result);
   }
-);
+
+  const result = orderBook.cancelOrder(orderId, userId);
+
+  console.log(result);
+
+  if (!result.success) {
+    return res.status(404).json(result);
+  }
+
+  io.emit("orderbook_update", orderBook.getAllBooks());
+
+  res.json(result);
+});
+
   return router;
 };
